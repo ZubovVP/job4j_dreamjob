@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -19,11 +20,19 @@ import java.time.LocalDate;
  * Date: 22.03.2021.
  */
 public class PostServlet extends HttpServlet {
+    final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        Store.instOf().save(new Post(0, req.getParameter("name"), req.getParameter("desc"), LocalDate.now()));
+        Store.instOf().save(
+                new Post(
+                        Integer.valueOf(req.getParameter("id")),
+                        req.getParameter("name"),
+                        req.getParameter("description"),
+                        LocalDate.parse(req.getParameter("created"), DATE_TIME_FORMATTER))
+        );
         resp.sendRedirect(req.getContextPath() + "/post/posts.jsp");
     }
 }
