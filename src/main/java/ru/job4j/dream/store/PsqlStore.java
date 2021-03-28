@@ -31,7 +31,7 @@ public class PsqlStore implements Store {
     private PsqlStore() {
         Properties cfg = new Properties();
         try (BufferedReader io = new BufferedReader(
-                new FileReader("src\\main\\resources\\db.properties")
+                new FileReader("db.properties")
         )) {
             cfg.load(io);
         } catch (Exception e) {
@@ -101,6 +101,34 @@ public class PsqlStore implements Store {
         }
     }
 
+    @Override
+    public void save(Candidate candidate) {
+        if (candidate.getId() == 0) {
+            create(candidate);
+        } else {
+            update(candidate);
+        }
+
+    }
+
+    @Override
+    public Candidate findCandidateById(int id) {
+        Candidate result = null;
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate WHERE id = ?")
+        ) {
+            ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    result = new Candidate(it.getInt("id"), it.getString("name"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     private Post create(Post post) {
         try (Connection cn = this.pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("INSERT INTO post(name, description, date) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
@@ -133,6 +161,35 @@ public class PsqlStore implements Store {
 
     }
 
+    private Candidate create(Candidate can) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
+            ps.setString(1, can.getName());
+            ps.execute();
+            try (ResultSet id = ps.getGeneratedKeys()) {
+                if (id.next()) {
+                    can.setId(id.getInt(1));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return can;
+    }
+
+    private void update(Candidate can) {
+        try (Connection cn = this.pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("UPDATE  candidate SET name = ? WHERE id = ?")) {
+            ps.setString(1, can.getName());
+            ps.setInt(2, can.getId());
+            ps.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     public Post findById(int id) {
         Post result = null;
@@ -141,7 +198,7 @@ public class PsqlStore implements Store {
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
-                if(it.next()) {
+                if (it.next()) {
                     result = new Post(it.getInt("id"), it.getString("name"), it.getString("description"), LocalDate.parse(it.getString("date"), this.dateTimeFormatter));
                 }
             }
