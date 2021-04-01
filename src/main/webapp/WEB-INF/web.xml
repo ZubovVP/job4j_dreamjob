@@ -3,7 +3,7 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
+    <display-name>Archetype Created Web Application</display-name>
     <servlet>
         <servlet-name>PostServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.PostServlet</servlet-class>
@@ -27,5 +27,21 @@
     <servlet-mapping>
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/index.do</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.DownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/download</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>PhotoCandidateServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.UploadPhotoCandidateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PhotoCandidateServlet</servlet-name>
+        <url-pattern>/photo</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class PsqlStore implements Store {
              PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate")) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name")));
+                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo")));
                 }
             }
         } catch (Exception e) {
@@ -163,9 +164,10 @@ public class PsqlStore implements Store {
 
     private Candidate create(Candidate can) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name, photo) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, can.getName());
+            ps.setString(2, can.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -178,11 +180,24 @@ public class PsqlStore implements Store {
         return can;
     }
 
+    @Override
+    public boolean deleteCandidate(int id) {
+        try (Connection conn = this.pool.getConnection();
+             PreparedStatement st = conn.prepareStatement("DELETE FROMcandidate WHERE id = ?;")) {
+            st.setInt(1, id);
+            st.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     private void update(Candidate can) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("UPDATE  candidate SET name = ? WHERE id = ?")) {
+             PreparedStatement ps = cn.prepareStatement("UPDATE  candidate SET name = ?, photo = ? WHERE id = ?")) {
             ps.setString(1, can.getName());
-            ps.setInt(2, can.getId());
+            ps.setString(2, can.getPhoto());
+            ps.setInt(3, can.getId());
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
