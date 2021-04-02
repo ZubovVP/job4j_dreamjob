@@ -29,12 +29,13 @@ public class CandidateServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         int id = Integer.parseInt(req.getParameter("id"));
         String name = req.getParameter("name");
-        if(name != null){
+        if (name == null) {
             PsqlStore.instOf().deleteCandidate(id);
+        } else {
+            PsqlStore.instOf().save(
+                    new Candidate(id, name)
+            );
         }
-        PsqlStore.instOf().save(
-                new Candidate(id, name)
-        );
         resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
 }

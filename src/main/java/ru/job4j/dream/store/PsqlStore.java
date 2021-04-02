@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -183,7 +182,7 @@ public class PsqlStore implements Store {
     @Override
     public boolean deleteCandidate(int id) {
         try (Connection conn = this.pool.getConnection();
-             PreparedStatement st = conn.prepareStatement("DELETE FROMcandidate WHERE id = ?;")) {
+             PreparedStatement st = conn.prepareStatement("DELETE FROM candidate WHERE id = ?;")) {
             st.setInt(1, id);
             st.executeUpdate();
         } catch (Exception e) {
