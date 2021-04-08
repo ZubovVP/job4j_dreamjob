@@ -10,3 +10,10 @@ CREATE TABLE candidate (
    name TEXT,
    photo TEXT
 );
+
+CREATE TABLE user (
+id SERIAL PRIMARY KEY,
+name VARCHAR (30),
+email VARCHAR (50),
+password VARCHAR (64)
+);

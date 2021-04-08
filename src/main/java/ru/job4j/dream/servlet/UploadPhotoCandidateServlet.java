@@ -5,7 +5,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import ru.job4j.dream.model.Candidate;
-import ru.job4j.dream.store.PsqlStore;
+import ru.job4j.dream.store.CsqlStore;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -43,7 +43,7 @@ public class UploadPhotoCandidateServlet extends HttpServlet {
         if (photo != null) {
             String name = req.getParameter("name");
             Candidate candidate = new Candidate(id, name, "");
-            PsqlStore.instOf().save(candidate);
+            CsqlStore.instOf().save(candidate);
             File file = new File("c:\\images\\" + photo);
             file.delete();
         } else {
@@ -71,9 +71,9 @@ public class UploadPhotoCandidateServlet extends HttpServlet {
                         try (FileOutputStream out = new FileOutputStream(file)) {
                             out.write(item.getInputStream().readAllBytes());
                         }
-                        Candidate candidate = PsqlStore.instOf().findCandidateById(id);
+                        Candidate candidate = (Candidate) CsqlStore.instOf().findById(id);
                         candidate.setPhoto(id + "." + item.getName().split("\\.")[1]);
-                        PsqlStore.instOf().save(candidate);
+                        CsqlStore.instOf().save(candidate);
                     }
                 }
             } catch (FileUploadException e) {

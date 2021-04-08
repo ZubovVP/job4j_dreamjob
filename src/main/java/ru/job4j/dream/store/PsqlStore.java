@@ -1,7 +1,6 @@
 package ru.job4j.dream.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 
 import java.io.BufferedReader;
@@ -24,7 +23,7 @@ import java.util.Properties;
  * Version: $Id$.
  * Date: 27.03.2021.
  */
-public class PsqlStore implements Store {
+public class PsqlStore implements Store<Post> {
     private final BasicDataSource pool = new BasicDataSource();
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -60,7 +59,7 @@ public class PsqlStore implements Store {
     }
 
     @Override
-    public Collection<Post> findAllPosts() {
+    public Collection<Post> findAll() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = this.pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("SELECT * FROM post")
@@ -77,22 +76,6 @@ public class PsqlStore implements Store {
     }
 
     @Override
-    public Collection<Candidate> findAllCandidates() {
-        List<Candidate> candidates = new ArrayList<>();
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate")) {
-            try (ResultSet it = ps.executeQuery()) {
-                while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo")));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return candidates;
-    }
-
-    @Override
     public void save(Post post) {
         if (post.getId() == 0) {
             create(post);
@@ -102,31 +85,15 @@ public class PsqlStore implements Store {
     }
 
     @Override
-    public void save(Candidate candidate) {
-        if (candidate.getId() == 0) {
-            create(candidate);
-        } else {
-            update(candidate);
-        }
-
-    }
-
-    @Override
-    public Candidate findCandidateById(int id) {
-        Candidate result = null;
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate WHERE id = ?")
-        ) {
-            ps.setInt(1, id);
-            try (ResultSet it = ps.executeQuery()) {
-                if (it.next()) {
-                    result = new Candidate(it.getInt("id"), it.getString("name"));
-                }
-            }
+    public boolean delete(int id) {
+        try (Connection conn = this.pool.getConnection();
+             PreparedStatement st = conn.prepareStatement("DELETE FROM post WHERE id = ?;")) {
+            st.setInt(1, id);
+            st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+        return true;
     }
 
     private Post create(Post post) {
@@ -154,49 +121,6 @@ public class PsqlStore implements Store {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setInt(3, post.getId());
-            ps.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private Candidate create(Candidate can) {
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name, photo) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
-        ) {
-            ps.setString(1, can.getName());
-            ps.setString(2, can.getPhoto());
-            ps.execute();
-            try (ResultSet id = ps.getGeneratedKeys()) {
-                if (id.next()) {
-                    can.setId(id.getInt(1));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return can;
-    }
-
-    @Override
-    public boolean deleteCandidate(int id) {
-        try (Connection conn = this.pool.getConnection();
-             PreparedStatement st = conn.prepareStatement("DELETE FROM candidate WHERE id = ?;")) {
-            st.setInt(1, id);
-            st.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    private void update(Candidate can) {
-        try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("UPDATE  candidate SET name = ?, photo = ? WHERE id = ?")) {
-            ps.setString(1, can.getName());
-            ps.setString(2, can.getPhoto());
-            ps.setInt(3, can.getId());
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,8 +1,5 @@
 package ru.job4j.dream.store;
 
-import ru.job4j.dream.model.Candidate;
-import ru.job4j.dream.model.Post;
-
 import java.util.Collection;
 
 /**
@@ -10,20 +7,14 @@ import java.util.Collection;
  * User: Vitaly Zubov.
  * Email: Zubov.VP@yandex.ru.
  * Version: $Id$.
- * Date: 27.03.2021.
+ * Date: 07.04.2021.
  */
-public interface Store {
-    Collection<Post> findAllPosts();
+public interface Store<E> {
+    Collection<E> findAll();
 
-    Collection<Candidate> findAllCandidates();
+    void save(E element);
 
-    void save(Post post);
+    E findById (int id);
 
-    void save(Candidate candidate);
-
-    Candidate findCandidateById (int id);
-
-    Post findById(int id);
-
-    boolean deleteCandidate(int id);
+    boolean delete (int id);
 }

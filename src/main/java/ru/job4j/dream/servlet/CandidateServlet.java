@@ -1,7 +1,7 @@
 package ru.job4j.dream.servlet;
 
 import ru.job4j.dream.model.Candidate;
-import ru.job4j.dream.store.PsqlStore;
+import ru.job4j.dream.store.CsqlStore;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class CandidateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("candidates", PsqlStore.instOf().findAllCandidates());
+        req.setAttribute("candidates", CsqlStore.instOf().findAll());
         req.getRequestDispatcher("candidate/candidates.jsp").forward(req, resp);
     }
 
@@ -30,9 +30,9 @@ public class CandidateServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         String name = req.getParameter("name");
         if (name == null) {
-            PsqlStore.instOf().deleteCandidate(id);
+            CsqlStore.instOf().delete(id);
         } else {
-            PsqlStore.instOf().save(
+            CsqlStore.instOf().save(
                     new Candidate(id, name)
             );
         }
