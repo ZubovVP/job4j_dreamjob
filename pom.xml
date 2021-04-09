@@ -57,6 +57,12 @@
       <artifactId>slf4j-api</artifactId>
       <version>2.0.0-alpha1</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.atlassian.security/atlassian-password-encoder -->
+    <dependency>
+      <groupId>com.atlassian.security</groupId>
+      <artifactId>atlassian-password-encoder</artifactId>
+      <version>3.2.14</version>
+    </dependency>
   </dependencies>
 
   <build>

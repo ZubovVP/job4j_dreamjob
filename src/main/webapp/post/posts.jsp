@@ -42,10 +42,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
             </li>
+            <%if (session.getAttribute("user") != null) {%>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"> <c:out value="${user.name}"/> |
+                <a class="nav-link" href="<%=request.getContextPath()%>/logout">  <c:out value="${user.name}"/> |
                     Выйти</a>
             </li>
+            <%} else {%>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/reg.jsp">Регистрация</a>
+            </li>
+            <%
+                } %>
         </ul>
         <div class="card" style="width: 100%">
             <div class="card-header">
