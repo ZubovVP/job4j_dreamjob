@@ -57,12 +57,38 @@
       <artifactId>slf4j-api</artifactId>
       <version>2.0.0-alpha1</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.atlassian.security/atlassian-password-encoder -->
     <dependency>
-      <groupId>com.atlassian.security</groupId>
-      <artifactId>atlassian-password-encoder</artifactId>
-      <version>3.2.14</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.5.13</version>
+      <scope>test</scope>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/junit/junit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>2.0.7</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2 -->
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito2</artifactId>
+      <version>2.0.4</version>
+      <scope>test</scope>
+    </dependency>
+
+
+
   </dependencies>
 
   <build>
