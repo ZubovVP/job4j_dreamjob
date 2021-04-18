@@ -15,12 +15,14 @@
         $.ajax({
             type: 'GET',
             url: 'http://localhost:8080/dreamjob/greet',
-            data: 'email=' + $('#exampleInputEmail1').val(),
-            dataType: 'text'
+            data: {email : $('#exampleInputEmail1').val()},
+            dataType: 'application/json'
         }).done(function (data) {
-            $('#form div:first').after('<div><h1>' + data.toString() + '</div></h1>');
+            var email = JSON.parse(data.responseText);
+            $('#form div:first').after('<div><h1>' + email.toString() + '</div></h1>');
         }).fail(function (err) {
-            $('#form div:first').after('<div><h1>' + err.toString() + '</div></h1>');
+            var email = JSON.parse(err.responseText);
+            $('#form div:first').after('<div><h1>' + email.toString() + '</div></h1>');
         });
     }
 </script>
