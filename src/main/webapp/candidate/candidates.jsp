@@ -131,6 +131,7 @@
                                         </form>
                                     </td>
                                 </div>
+                            </div>
                         </tr>
                     </c:forEach>
                     </tbody>

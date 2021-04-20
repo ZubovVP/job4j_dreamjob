@@ -5,10 +5,16 @@ CREATE TABLE post (
    date VARCHAR (15)
 );
 
+CREATE TABLE cites(
+ id SERIAL PRIMARY KEY,
+ name TEXT
+);
+
 CREATE TABLE candidate (
    id SERIAL PRIMARY KEY,
    name TEXT,
-   photo TEXT
+   photo TEXT,
+   id_city int references cites(id)
 );
 
 CREATE TABLE user (

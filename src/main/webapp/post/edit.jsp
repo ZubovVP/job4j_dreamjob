@@ -27,6 +27,19 @@
     <title>Работа мечты</title>
 </head>
 <body>
+<script>
+    function validate() {
+        var result = true;
+        if ($('#name').val() === '') {
+            result = false;
+            alert("Fill name");
+        } else if ($('#description').val() === '') {
+            result = false;
+            alert("Fill description");
+        }
+        return result;
+    }
+</script>
 <%
     String id = request.getParameter("id");
     Post post = new Post(0, "", "", LocalDate.now());
@@ -65,14 +78,16 @@
                 <% } %>
             </div>
             <div class="card-body">
-                <form action="<%=request.getContextPath()%>/posts.do?id=<%=post.getId()%>" method="post">
+                <form action="<%=request.getContextPath()%>/posts.do?id=<%=post.getId()%>" method="post"
+                      onsubmit="return validate()">
                     <div class="form-group">
                         <label>Имя</label>
-                        <input type="text" class="form-control" name="name" value="<%=post.getName()%>">
+                        <input type="text" class="form-control" name="name" value="<%=post.getName()%>" id="name">
                     </div>
                     <div class="form-group">
                         <label>Описание</label>
-                        <input type="text" class="form-control" name="description" value="<%=post.getDescription()%>">
+                        <input type="text" class="form-control" name="description" value="<%=post.getDescription()%>"
+                               id="description">
                     </div>
                     <input type="hidden" class="form-control" name="created" value="<%=post.getCreated()%>">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
