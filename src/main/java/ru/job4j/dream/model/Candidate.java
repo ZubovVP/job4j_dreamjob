@@ -14,16 +14,17 @@ public class Candidate {
     private int id;
     private String name;
     private String photo;
+    private int city_id;
 
-    public Candidate(int id, String name, String photo) {
-        this(id, name);
+    public Candidate(int id, String name, String photo, int city_id) {
+        this(id, name, city_id);
         this.photo = photo;
     }
 
-    public Candidate(int id, String name) {
+    public Candidate(int id, String name, int city_id) {
         this.id = id;
         this.name = name;
-        this.photo = photo;
+        this.city_id = city_id;
     }
 
     public int getId() {
@@ -48,6 +49,14 @@ public class Candidate {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public int getCity_id() {
+        return city_id;
+    }
+
+    public void setCity_id(int city_id) {
+        this.city_id = city_id;
     }
 
     @Override

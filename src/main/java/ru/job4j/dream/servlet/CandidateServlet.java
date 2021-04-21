@@ -32,8 +32,9 @@ public class CandidateServlet extends HttpServlet {
         if (name == null) {
             CsqlStore.instOf().delete(id);
         } else {
+            int city_id = Integer.parseInt(req.getParameter("city"));
             CsqlStore.instOf().save(
-                    new Candidate(id, name)
+                    new Candidate(id, name, city_id)
             );
         }
         resp.sendRedirect(req.getContextPath() + "/candidates.do");

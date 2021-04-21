@@ -14,9 +14,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
@@ -26,10 +25,37 @@
 
     <title>Работа мечты</title>
 </head>
-<body>
+<script>
+    function validate() {
+        var result = true;
+        if ($('#name').val() == '') {
+            alert("fill name");
+            result = false;
+        }
+        return result;
+    }
+
+    function loadCities() {
+        $.ajax("http://localhost:8080/dreamjob/city", {
+                method: 'GET',
+                dataType: 'application/json',
+                complete: function (data) {
+                    console.log(data);
+                    var city = JSON.parse(data.responseText);
+                    for ( var i = 0; i < city.length; i++ ) {
+                        $( '#mySelectId' ).append( '<option value="' + city[i]['id'] + '">' + city[i]['name'] + '</option>' );
+                    }
+                    $( '#mySelectId' ).prop( 'disabled', false ); // Включаем поле
+                    console.log(data);
+                }
+            }
+        );
+    }
+</script>
+<body onload="loadCities()">
 <%
     String id = request.getParameter("id");
-    Candidate can = new Candidate(0, "");
+    Candidate can = new Candidate(0, "", 0);
     if (id != null) {
         can = (Candidate) CsqlStore.instOf().findById(Integer.valueOf(id));
     }
@@ -65,10 +91,18 @@
                 <% } %>
             </div>
             <div class="card-body">
-                <form action="<%=request.getContextPath()%>/candidates.do?id=<%=can.getId()%>" method="post">
+                <form name="myForm" action="<%=request.getContextPath()%>/candidates.do?id=<%=can.getId()%>" method="post"
+                      onsubmit="return validate()">
                     <div class="form-group">
                         <label>Имя</label>
-                        <input type="text" class="form-control" name="name" value="<%=can.getName()%>">
+                        <input type="text" class="form-control" id="name" name="name" value="<%=can.getName()%>">
+                    </div>
+                    <div class="form-group" id="city1">
+                        <p>
+                            <label for="mySelectId">Выберите город:</label>
+                            <select id="mySelectId" name="city">
+                            </select>
+                        </p>
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>

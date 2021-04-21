@@ -40,9 +40,11 @@ public class UploadPhotoCandidateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         String photo = req.getParameter("photo");
+
         if (photo != null) {
             String name = req.getParameter("name");
-            Candidate candidate = new Candidate(id, name, "");
+            int id_city = Integer.parseInt(req.getParameter("id_city"));
+            Candidate candidate = new Candidate(id, name, photo, id_city);
             CsqlStore.instOf().save(candidate);
             File file = new File("c:\\images\\" + photo);
             file.delete();

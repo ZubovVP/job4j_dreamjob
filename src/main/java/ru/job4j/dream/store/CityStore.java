@@ -1,14 +1,13 @@
 package ru.job4j.dream.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,12 +19,12 @@ import java.util.Properties;
  * User: Vitaly Zubov.
  * Email: Zubov.VP@yandex.ru.
  * Version: $Id$.
- * Date: 07.04.2021.
+ * Date: 19.04.2021.
  */
-public class CsqlStore implements Store<Candidate> {
+public class CityStore implements Store<City> {
     private final BasicDataSource pool = new BasicDataSource();
 
-    private CsqlStore() {
+    private CityStore() {
         Properties cfg = new Properties();
         try (BufferedReader io = new BufferedReader(
                 new FileReader("db.properties")
@@ -46,24 +45,30 @@ public class CsqlStore implements Store<Candidate> {
         pool.setMinIdle(5);
         pool.setMaxIdle(10);
         pool.setMaxOpenPreparedStatements(100);
+
+        if (this.findAll().size() == 0) {
+            this.save((new City(0, "Moscow")));
+            this.save((new City(0, "Kazan")));
+            this.save((new City(0, "Orel")));
+        }
     }
 
     private static final class Lazy {
-        private static final Store INST = new CsqlStore();
+        private static final Store INST = new CityStore();
     }
 
     public static Store instOf() {
-        return CsqlStore.Lazy.INST;
+        return CityStore.Lazy.INST;
     }
 
     @Override
-    public Collection<Candidate> findAll() {
-        List<Candidate> candidates = new ArrayList<>();
+    public Collection<City> findAll() {
+        List<City> candidates = new ArrayList<>();
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate")) {
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM cites")) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo"), it.getInt("city_id")));
+                    candidates.add(new City(it.getInt("id"), it.getString("name")));
                 }
             }
         } catch (Exception e) {
@@ -73,7 +78,7 @@ public class CsqlStore implements Store<Candidate> {
     }
 
     @Override
-    public void save(Candidate element) {
+    public void save(City element) {
         if (element.getId() == 0) {
             create(element);
         } else {
@@ -83,15 +88,15 @@ public class CsqlStore implements Store<Candidate> {
     }
 
     @Override
-    public Candidate findById(int id) {
-        Candidate result = null;
+    public City findById(int id) {
+        City result = null;
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate WHERE id = ?")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM cites WHERE id = ?")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    result = new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo"), it.getInt("city_id"));
+                    result = new City(it.getInt("id"), it.getString("name"));
                 }
             }
         } catch (Exception e) {
@@ -103,7 +108,7 @@ public class CsqlStore implements Store<Candidate> {
     @Override
     public boolean delete(int id) {
         try (Connection conn = this.pool.getConnection();
-             PreparedStatement st = conn.prepareStatement("DELETE FROM candidate WHERE id = ?;")) {
+             PreparedStatement st = conn.prepareStatement("DELETE FROM cites WHERE id = ?;")) {
             st.setInt(1, id);
             st.executeUpdate();
         } catch (Exception e) {
@@ -112,12 +117,11 @@ public class CsqlStore implements Store<Candidate> {
         return true;
     }
 
-    private void update(Candidate can) {
+    private void update(City can) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("UPDATE  candidate SET name = ?, photo = ? WHERE id = ?")) {
+             PreparedStatement ps = cn.prepareStatement("UPDATE  cytes SET name = ? WHERE id = ?")) {
             ps.setString(1, can.getName());
-            ps.setString(2, can.getPhoto());
-            ps.setInt(3, can.getId());
+            ps.setInt(2, can.getId());
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,12 +129,11 @@ public class CsqlStore implements Store<Candidate> {
 
     }
 
-    private Candidate create(Candidate can) {
+    private City create(City can) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name, photo) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps = cn.prepareStatement("INSERT INTO cites (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, can.getName());
-            ps.setString(2, can.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
