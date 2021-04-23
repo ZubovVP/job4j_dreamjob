@@ -36,15 +36,15 @@
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
             </li>
+            <%if (session.getAttribute("user") != null) {%>
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Добавить вакансию</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
             </li>
-            <%if (session.getAttribute("user") != null) {%>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/logout">  <c:out value="${user.name}"/> |
+                <a class="nav-link" href="<%=request.getContextPath()%>/logout">  <c:out value="${user}"/> |
                     Выйти</a>
             </li>
             <%} else {%>

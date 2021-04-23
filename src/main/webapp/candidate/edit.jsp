@@ -43,7 +43,7 @@
                     console.log(data);
                     var city = JSON.parse(data.responseText);
                     for ( var i = 0; i < city.length; i++ ) {
-                        $( '#mySelectId' ).append( '<option value="' + city[i]['id'] + '">' + city[i]['name'] + '</option>' );
+                        $( '#mySelectId' ).append( '<option id="city_id" value="' + city[i]['id'] + '">' + city[i]['name'] + '</option>' );
                     }
                     $( '#mySelectId' ).prop( 'disabled', false ); // Включаем поле
                     console.log(data);
@@ -76,7 +76,7 @@
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"> <c:out value="${user.name}"/> |
+                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"> <c:out value="${user}"/> |
                     Выйти</a>
             </li>
         </ul>
@@ -97,7 +97,7 @@
                         <label>Имя</label>
                         <input type="text" class="form-control" id="name" name="name" value="<%=can.getName()%>">
                     </div>
-                    <div class="form-group" id="city1">
+                    <div class="form-group" id="city">
                         <p>
                             <label for="mySelectId">Выберите город:</label>
                             <select id="mySelectId" name="city">

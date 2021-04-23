@@ -27,7 +27,7 @@ public class AuthServlet extends HttpServlet {
         User user = UsqlStore.instOf().findByEmailAndPassword(email, password);
         if (user != null) {
             HttpSession sc = req.getSession();
-            sc.setAttribute("user", user);
+            sc.setAttribute("user", user.getName());
             resp.sendRedirect(req.getContextPath() + "/posts.do");
         } else {
             req.setAttribute("error", "Не верный email или пароль");

@@ -127,10 +127,11 @@ public class CsqlStore implements Store<Candidate> {
 
     private Candidate create(Candidate can) {
         try (Connection cn = this.pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name, photo) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name, city_id, photo) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, can.getName());
-            ps.setString(2, can.getPhoto());
+            ps.setInt(2, can.getCity_id());
+            ps.setString(3, can.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="ru.job4j.dream.store.Store" %>
-<%@ page import="ru.job4j.dream.model.Candidate" %>
+<%@ page import="ru.job4j.dream.model.Post" %>
 <%@ page import="java.util.Collection" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <!doctype html>
@@ -62,6 +62,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
             </li>
+            <%if (session.getAttribute("user") != null) {%>
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Добавить вакансию</a>
             </li>
@@ -69,9 +70,18 @@
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"> <c:out value="${user.name}"/> |
+                <a class="nav-link" href="<%=request.getContextPath()%>/logout">  <c:out value="${user}"/> |
                     Выйти</a>
             </li>
+            <%} else {%>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/reg.jsp">Регистрация</a>
+            </li>
+            <%
+                } %>
         </ul>
         <div class="card" style="width: 100%">
             <div class="card-header">
