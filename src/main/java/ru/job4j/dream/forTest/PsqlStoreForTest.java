@@ -1,7 +1,5 @@
 package ru.job4j.dream.forTest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.store.Store;
 
@@ -18,7 +16,6 @@ import java.util.stream.Collectors;
  */
 public class PsqlStoreForTest implements Store<Post> {
     private final List<Post> posts = new ArrayList<>();
-    private int id = 1;
 
     @Override
     public Collection<Post> findAll() {
@@ -38,11 +35,7 @@ public class PsqlStoreForTest implements Store<Post> {
 
     @Override
     public boolean delete(int id) {
-        for (Post post : this.posts) {
-            if (post.getId() == id) {
-                posts.remove(post);
-            }
-        }
+        this.posts.removeIf(post -> post.getId() == id);
         return true;
     }
 }

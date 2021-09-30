@@ -1,21 +1,34 @@
-Dream job
+Биржа работы
 =============
 
-This project allows you to create vacancies for employers and publish resumes to employees. 
+Биржа работы - это Web приложение, которое позволяет публиковать объявления (редактировать), а так же размещать вакансии. Всю полученную информацию приложение хранит в базе данных (фотографии хранятся в отдельной папке на сервере). В приложении присутствует регистрация и аутентификация. В приложении настроена система фильтрации (без авторизации пользователям доступна только стартовая страница).
 
-###Main view
+#### Инструменты:
+В данном проекте использовались следующие инструменты:    
+1) IntelliJ Idea    
+2) Maven    
+4) Git    
+5) Servlet 
+6) JSP
+7) Ajax   
+6) PostgreSQL.      
+### Стартовая страница
 ![ScreenShot](images/main_view.png)
 ____
 
-
-###List employees
+### Список кандидатов
 ![ScreenShot](images/candidates.png)
 ____
 
-###Create employee
+### Добавления кандидата
 ![ScreenShot](images/create_candidate.png)
 ____
 
-###Create vacancy
+### Добавление вакансии
 ![ScreenShot](images/create_post.png)
 
+### Регистрация
+![ScreenShot](images/authorization.png)
+
+### Авторизация
+![ScreenShot](images/registration.png)
